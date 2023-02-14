@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Movie Application";
+}
+
+@model Mission6_cam4del.Models.ApplicationResponse
+
+<h1>Enter Movies Here</h1>
+<div>
+    <form method="post">
+        <label>Category</label>
+        <input asp-for="category" /><br />
+        <label>Title</label>
+        <input asp-for="title" /><br />
+        <label>Year</label>
+        <input asp-for="year" /><br />
+        <label>Director</label>
+        <input asp-for="director" /><br />
+        <label>Rating</label>
+        <select asp-for="rating">
+            <option>G</option>
+            <option>PG</option>
+            <option>PG-13</option>
+            <option>R</option>
+        </select><br />
+        <label>Edited</label>
+        <select asp-for="edited">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select><br />
+        <label>Lent To</label>
+        <input asp-for="lent_to" /><br />
+        <label>Notes</label>
+        <input asp-for="notes" /><br />
+        <button type="submit">Enter Movie</button>
+    </form>
+</div>

@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewData["Title"] = "Movie Entered";
+}
+<h1>@ViewData["Title"]</h1>
+
+@model Mission6_cam4del.Models.ApplicationResponse
+
+<h2>@Model.title has been added to the database</h2>
+<div>
+    <a asp-controller="Home" asp-action="MovieApplication">Click here to enter another movie</a>
+</div>
