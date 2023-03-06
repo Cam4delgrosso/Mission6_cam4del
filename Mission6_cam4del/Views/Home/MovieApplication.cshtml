@@ -7,8 +7,17 @@
 <h1>Enter Movies Here</h1>
 <div>
     <form method="post">
-        <label>Category</label>
-        <input asp-for="category" /><br />
+        <div asp-validation-summary="All"></div>
+        <input asp-for="MovieId" type="hidden"/>
+        <label asp-for="CategoryID">Category</label>
+        <select asp-for="CategoryID">
+            <option value="">Select Category</option>
+            @foreach (Category c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryID">@c.CategoryName</option>
+            }
+            
+        </select><br />
         <label>Title</label>
         <input asp-for="title" /><br />
         <label>Year</label>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission6_cam4del.Models;
 using System;
@@ -11,12 +12,10 @@ namespace Mission6_cam4del.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private MovieInfoContext movieContext { get; set; }
         //Constructor
-        public HomeController(ILogger<HomeController> logger, MovieInfoContext x)
+        public HomeController(MovieInfoContext x)
         {
-            _logger = logger;
             movieContext = x;
         }
 
@@ -28,7 +27,9 @@ namespace Mission6_cam4del.Controllers
         [HttpGet]
         public IActionResult MovieApplication()
         {
-            return View();
+            ViewBag.Categories = movieContext.Categories.ToList();
+
+            return View("MovieApplication", new ApplicationResponse());
         }
 
         [HttpPost]
@@ -37,9 +38,15 @@ namespace Mission6_cam4del.Controllers
             if (ModelState.IsValid)
             {
                 movieContext.Add(ar);
-                movieContext.SaveChanges();  
+                movieContext.SaveChanges();
+                return View("Confirmation", ar);
             }
-            return View("Confirmation", ar);
+            else
+            {
+                ViewBag.Categories = movieContext.Categories.ToList();
+                return View();
+            }
+            
 
         }
         public IActionResult Podcasts()
@@ -47,10 +54,45 @@ namespace Mission6_cam4del.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult MovieList()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var movies = movieContext.responses
+                //.Include(x => x.Category)
+                .OrderBy(x=> x.title)
+                .ToList();
+            return View(movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Categories = movieContext.Categories.ToList();
+
+            var application = movieContext.responses.Single(x => x.MovieId == id);
+
+            return View("MovieApplication", application);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(ApplicationResponse edits)
+        {
+            movieContext.Update(edits);
+            movieContext.SaveChanges();
+            return RedirectToAction("MovieList");
+        }
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var movie = movieContext.responses.Single(x => x.MovieId == id);
+
+            return View(movie);
+        }
+        [HttpPost]
+        public IActionResult Delete(ApplicationResponse ar)
+        {
+            movieContext.responses.Remove(ar);
+            movieContext.SaveChanges();
+            return RedirectToAction("MovieList");
         }
     }
 }

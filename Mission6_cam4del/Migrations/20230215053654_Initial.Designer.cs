@@ -8,8 +8,8 @@ using Mission6_cam4del.Models;
 namespace Mission6_cam4del.Migrations
 {
     [DbContext(typeof(MovieInfoContext))]
-    [Migration("20230214020745_Initial3")]
-    partial class Initial3
+    [Migration("20230215053654_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,8 @@ namespace Mission6_cam4del.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("director")
                         .IsRequired()
@@ -54,13 +53,15 @@ namespace Mission6_cam4del.Migrations
 
                     b.HasKey("MovieId");
 
+                    b.HasIndex("CategoryID");
+
                     b.ToTable("responses");
 
                     b.HasData(
                         new
                         {
                             MovieId = 1,
-                            category = "Action",
+                            CategoryID = 1,
                             director = "John Singleton",
                             edited = false,
                             lent_to = "Cameron Delgrosso",
@@ -72,7 +73,7 @@ namespace Mission6_cam4del.Migrations
                         new
                         {
                             MovieId = 2,
-                            category = "Comedy",
+                            CategoryID = 2,
                             director = "Phil Lord",
                             edited = true,
                             lent_to = "Cameron Delgrosso",
@@ -84,7 +85,7 @@ namespace Mission6_cam4del.Migrations
                         new
                         {
                             MovieId = 3,
-                            category = "Action",
+                            CategoryID = 1,
                             director = "Joseph Kosinski",
                             edited = false,
                             lent_to = "Cameron Delgrosso",
@@ -93,6 +94,66 @@ namespace Mission6_cam4del.Migrations
                             title = "Top Gun Maverick",
                             year = 2022
                         });
+                });
+
+            modelBuilder.Entity("Mission6_cam4del.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryID");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Action"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryID = 3,
+                            CategoryName = "Horror"
+                        },
+                        new
+                        {
+                            CategoryID = 4,
+                            CategoryName = "Thriller"
+                        },
+                        new
+                        {
+                            CategoryID = 5,
+                            CategoryName = "Romance"
+                        },
+                        new
+                        {
+                            CategoryID = 6,
+                            CategoryName = "Animation"
+                        },
+                        new
+                        {
+                            CategoryID = 7,
+                            CategoryName = "Documentary"
+                        });
+                });
+
+            modelBuilder.Entity("Mission6_cam4del.Models.ApplicationResponse", b =>
+                {
+                    b.HasOne("Mission6_cam4del.Models.Category", "CategoryName")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
